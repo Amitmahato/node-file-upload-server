@@ -1,0 +1,29 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:18.2.0 # next-gen image - contains Node.js, npm, yarn v1, info on this image available at https://circleci.com/developer/images/image/cimg/node
+    steps:
+      - checkout
+      - run:
+          name: Check available packages in image
+          command: |
+            node --version
+            yarn --version
+      - run:
+          name: Install Dependencies
+          command: yarn install
+      - run:
+          name: Test App
+          command: yarn test
+      # - run:
+      #     name: Build
+      #     command: |
+      #       yarn build
+
+workflows:
+  version: 2
+  build-workflow:
+    jobs:
+      - build
