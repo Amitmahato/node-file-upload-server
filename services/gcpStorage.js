@@ -1,6 +1,8 @@
 import { Storage } from "@google-cloud/storage";
 
-const gcpStorage = new Storage();
+const gcpStorage = new Storage({
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+});
 
 const uploadFile = async (filePath, destFileName) => {
   await gcpStorage.bucket(process.env.BUCKET_NAME).upload(filePath, {
