@@ -3,6 +3,10 @@ import { makePublic, uploadFile } from "../services/gcpStorage.js";
 import multer from "multer";
 import path from "path";
 
+export const getPort = (req, res) => {
+  res.send({ port: process.env.PORT }).status(200);
+};
+
 export const getPing = (req, res) => {
   res.send({ message: "pong" }).status(200);
 };
