@@ -3,7 +3,10 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: cimg/node:18.2.0 # next-gen image - contains Node.js, npm, yarn v1, info on this image available at https://circleci.com/developer/images/image/cimg/node
+      - image: cimg/node:16.0.0 # next-gen image - contains Node.js, npm, yarn v1, info on this image available at https://circleci.com/developer/images/image/cimg/node
+
+    working_directory: ~/file-uploader-api
+
     steps:
       - checkout
       - run:
@@ -17,13 +20,57 @@ jobs:
       - run:
           name: Test App
           command: yarn test
-      # - run:
-      #     name: Build
-      #     command: |
-      #       yarn build
+      - run:
+          name: Run app & sleep of 5 seconds
+          command: |
+            yarn start &
+            sleep 5
+      - run:
+          name: Perform a ping request & test for response
+          command: curl http://localhost:$PORT/ping | grep pong
+
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+
+    working_directory: ~/file-uploader-api
+
+    steps:
+      - checkout
+      - run:
+          name: Initializing the Environment variables
+          command: |
+            echo "
+              NODE_ENV=$NODE_ENV
+              PORT=$PORT
+              BUCKET_NAME=$BUCKET_NAME
+              UPLOAD_DIR=$UPLOAD_DIR
+              GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
+              UI_URL=$UI_URL
+            " > .env
+
+      - run:
+          name: Preparing GCP specific files for deployment
+          command: |
+            echo $GOOGLE_SERVICE_KEY > serviceKey.json
+            echo $SERVICE_ACCOUNT_KEY > $GOOGLE_APPLICATION_CREDENTIALS
+
+      - run:
+          name: Authenticating and configuring the Google Cloud Platform
+          command: |
+            gcloud auth activate-service-account --key-file=serviceKey.json
+            gcloud --quiet config set account $GCLOUD_SERVICE_ACCOUNT
+            gcloud --quiet config set project $GCLOUD_PROJECT_ID
+
+      - run:
+          name: Deploying File Uploader Api
+          command: |
+            gcloud app deploy app.yaml --quiet
 
 workflows:
   version: 2
   build-workflow:
     jobs:
       - build
+      - deploy:
+          context: file-uploader-api
