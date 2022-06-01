@@ -39,6 +39,20 @@ jobs:
 
     steps:
       - checkout
+
+      - node/install:
+          install-yarn: true
+          node-version: 16.0.0
+
+      - run:
+          name: Checking the Node.js version
+          command: |
+            node --version
+
+      - run:
+          name: Installing Dependencies
+          command: yarn install
+
       - run:
           name: Initializing the Environment variables
           command: |
@@ -61,9 +75,11 @@ jobs:
           name: Check if present directory contains required file(s)
           command: |
             pwd
+            ls -a
             ls -a | grep ".env"
             ls -a | grep "serviceKey.json"
-            ls -a | grep "$GOOGLE_APPLICATION_CREDENTIALS"
+            ls -a | grep "node_modules"
+            ls -a | grep "serviceAccountKey.json"
             ls -a | grep "app.js"
 
       - run:
@@ -81,6 +97,9 @@ jobs:
       - run:
           name: Post Deployment Testing
           command: curl $API_URL/ping | grep "pong"
+
+orbs:
+  node: circleci/node@5.0.2
 
 workflows:
   version: 2
