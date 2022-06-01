@@ -75,7 +75,6 @@ jobs:
           name: Check if present directory contains required file(s)
           command: |
             pwd
-            ls -a
             ls -a | grep ".env"
             ls -a | grep "serviceKey.json"
             ls -a | grep "node_modules"
@@ -111,3 +110,7 @@ workflows:
           context: file-uploader-api
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - main

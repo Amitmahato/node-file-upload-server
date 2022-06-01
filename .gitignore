@@ -3,3 +3,5 @@
 serviceAccountKey.json
 .env
 /public/images/*
+.gcloudignore
+serviceKey.json
