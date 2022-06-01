@@ -21,13 +21,15 @@ jobs:
           name: Test App
           command: yarn test
       - run:
-          name: Run app & sleep of 5 seconds
+          name: Start the server in background
           command: |
-            yarn start &
-            sleep 5
+            yarn start
+          background: true
       - run:
-          name: Perform a ping request & test for response
-          command: curl http://localhost:$PORT/ping | grep pong
+          name: Sleep for 5 seconds and Perform a ping request to test the response
+          command: |
+            sleep 5
+            curl http://localhost:$PORT/ping | grep pong
 
   deploy:
     docker:
