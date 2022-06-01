@@ -13,8 +13,9 @@ export const getPing = (req, res) => {
 
 const googleStorage = "https://storage.googleapis.com/";
 
+// new direcories cannot be created in App Engine instance, so using /tmp to temporarily store uploaded images
 const storage = multer.diskStorage({
-  destination: "public/images/",
+  destination: "/tmp/images/",
   // By default, multer removes file extensions so need add them back
   filename: function (req, file, cb) {
     cb(
