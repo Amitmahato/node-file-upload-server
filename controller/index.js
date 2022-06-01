@@ -3,14 +3,19 @@ import { makePublic, uploadFile } from "../services/gcpStorage.js";
 import multer from "multer";
 import path from "path";
 
+export const getPort = (req, res) => {
+  res.send({ port: process.env.PORT }).status(200);
+};
+
 export const getPing = (req, res) => {
   res.send({ message: "pong" }).status(200);
 };
 
 const googleStorage = "https://storage.googleapis.com/";
 
+// new direcories cannot be created in App Engine instance, so using /tmp to temporarily store uploaded images
 const storage = multer.diskStorage({
-  destination: "public/images/",
+  destination: "/tmp/images/",
   // By default, multer removes file extensions so need add them back
   filename: function (req, file, cb) {
     cb(

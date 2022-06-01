@@ -5,15 +5,22 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "test": "mocha"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.8.5",
+    "chai": "^4.3.6",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "mocha": "^10.0.0",
     "multer": "^1.4.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.9"
+  },
+  "engines": {
+    "node": "16.x.x"
   }
 }
