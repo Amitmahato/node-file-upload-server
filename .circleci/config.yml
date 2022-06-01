@@ -58,6 +58,15 @@ jobs:
             echo $SERVICE_ACCOUNT_KEY > $GOOGLE_APPLICATION_CREDENTIALS
 
       - run:
+          name: Check if present directory contains required file(s)
+          command: |
+            pwd
+            ls -a | grep ".env"
+            ls -a | grep "serviceKey.json"
+            ls -a | grep "$GOOGLE_APPLICATION_CREDENTIALS"
+            ls -a | grep "app.js"
+
+      - run:
           name: Authenticating and configuring the Google Cloud Platform
           command: |
             gcloud auth activate-service-account --key-file=serviceKey.json
