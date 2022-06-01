@@ -65,9 +65,13 @@ jobs:
             gcloud --quiet config set project $GCLOUD_PROJECT_ID
 
       - run:
-          name: Deploying File Uploader Api
+          name: Deploying File Uploader API
           command: |
             gcloud app deploy app.yaml --quiet
+
+      - run:
+          name: Post Deployment Testing
+          command: curl $API_URL/ping | grep "pong"
 
 workflows:
   version: 2
